@@ -4,7 +4,7 @@
 namespace STUDY_Roll_a_Ball
 {
     public sealed class PlayerBall :
-        Player
+        BasePlayer
     {
         private void FixedUpdate()
         {

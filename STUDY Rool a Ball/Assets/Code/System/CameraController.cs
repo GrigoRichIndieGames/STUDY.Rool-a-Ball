@@ -6,12 +6,12 @@ namespace STUDY_Roll_a_Ball
     public sealed class CameraController :
         MonoBehaviour
     {
-        private Player _player;
+        private BasePlayer _player;
         private Vector3 _offset;
 
         private void Start()
         {
-            _player = FindObjectOfType<Player>();
+            _player = FindObjectOfType<BasePlayer>();
             _offset = transform.position - _player.transform.position;
         }
 

@@ -1,19 +1,29 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 
 
 namespace STUDY_Roll_a_Ball
 {
     [RequireComponent(typeof(Rigidbody), typeof(SphereCollider))]
-    public class Player :
+    public class BasePlayer :
         MonoBehaviour
     {
-        public float Speed = 3.0f;
+        public event Action OnGameOver;
+        public event Action OnGameWin;
+
+        public Inventory Inventory { get; private set; }
+        public bool CanMove { get; set; } = true;
+        public float Speed { get; set; } = 3.0f;
+
 
         private Rigidbody _rigidbody;
         private BaseUserInput _userInput;
 
-        private void Start()
+        private void Awake()
         {
+            OnGameOver = () => { };
+            OnGameWin = () => { };
+
             TryGetComponent(out _rigidbody);
 
             switch (Application.platform)
@@ -29,14 +39,20 @@ namespace STUDY_Roll_a_Ball
                 default:
                     throw new System.InvalidOperationException("User input load exception");
             }
+
+            Inventory = new Inventory();
         }
 
+        public void GameOver() => OnGameOver.Invoke();
         protected void Move()
         {
-            var x = _userInput.GetHorizontalAxis();
-            var z = _userInput.GetVerticalAxis();
-            var movement = new Vector3(x, 0.0f, z);
-            _rigidbody.AddForce(movement * Speed);
+            if (CanMove)
+            {
+                var x = _userInput.GetHorizontalAxis();
+                var z = _userInput.GetVerticalAxis();
+                var movement = new Vector3(x, 0.0f, z);
+                _rigidbody.AddForce(movement * Speed);
+            }
         }
     }
 }
